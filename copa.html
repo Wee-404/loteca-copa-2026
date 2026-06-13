@@ -3,523 +3,853 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Copa 2026 — Grupos & Chaveamento</title>
+<title>Copa 2026 — Grupos & Brasil</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
+:root{
   --bg:#0d1117;--s1:#161b22;--s2:#1c2330;--s3:#21283a;
   --bdr:#30363d;--bdr2:#3d4450;
-  --gold:#e3a008;--gold2:#fbbf24;--gold-bg:rgba(227,160,8,.12);
-  --grn:#3fb950;--grn-bg:rgba(63,185,80,.13);
-  --red:#f85149;--red-bg:rgba(248,81,73,.13);
-  --blu:#58a6ff;--blu-bg:rgba(88,166,255,.13);
-  --orn:#e3b341;--orn-bg:rgba(227,179,65,.13);
-  --txt:#e6edf3;--txt2:#8b949e;--txt3:#484f58;
-  --brasil:#009c3b;
+  --gold:#e3a008;--gold2:#fbbf24;--gbg:rgba(227,160,8,.12);
+  --grn:#3fb950;--gbg2:rgba(63,185,80,.13);
+  --red:#f85149;--rbg:rgba(248,81,73,.13);
+  --blu:#58a6ff;--bbg:rgba(88,166,255,.13);
+  --orn:#e3b341;--obg:rgba(227,179,65,.13);
+  --txt:#e6edf3;--dim:#8b949e;--dim2:#484f58;
+  --br:#009c3b;--brbg:rgba(0,156,59,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh;}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh}
 
-header{background:var(--s1);border-bottom:1px solid var(--bdr);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:100;}
-.logo{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;color:var(--gold2);letter-spacing:.04em;}
-.logo span{color:var(--txt2);font-weight:400;}
-.btn{background:var(--s2);border:1px solid var(--bdr);border-radius:6px;color:var(--txt2);cursor:pointer;padding:7px 12px;font-size:.78rem;display:flex;align-items:center;gap:5px;transition:all .15s;text-decoration:none;}
-.btn:hover{color:var(--gold2);border-color:var(--gold);}
+header{background:var(--s1);border-bottom:1px solid var(--bdr);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:200}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:900;color:var(--gold2);letter-spacing:.04em}
+.logo span{color:var(--dim);font-weight:400}
+.btn-back{background:var(--s2);border:1px solid var(--bdr);border-radius:6px;color:var(--dim);padding:7px 12px;font-size:.78rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.btn-back:hover{color:var(--gold2);border-color:var(--gold)}
+.sync-info{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--dim)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--dim2);flex-shrink:0}
+.sync-dot.ok{background:var(--grn);animation:pulse 2s infinite}
+.sync-dot.loading{background:var(--gold2);animation:pulse .6s infinite}
+.sync-dot.err{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-.nav{background:var(--s1);border-bottom:1px solid var(--bdr);display:flex;overflow-x:auto;scrollbar-width:none;}
-.nav::-webkit-scrollbar{display:none;}
-.ntab{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--txt2);cursor:pointer;white-space:nowrap;transition:all .15s;}
-.ntab.active{color:var(--gold2);border-bottom-color:var(--gold2);}
-.ntab:hover:not(.active){color:var(--txt);}
+.nav{background:var(--s1);border-bottom:1px solid var(--bdr);display:flex;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.ntab{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);cursor:pointer;white-space:nowrap;transition:all .15s}
+.ntab.active{color:var(--gold2);border-bottom-color:var(--gold2)}
+.ntab:hover:not(.active){color:var(--txt)}
 
-.panel{display:none;padding:14px 14px 60px;}
-.panel.active{display:block;}
+.panel{display:none;padding:14px 14px 60px;max-width:900px;margin:0 auto}
+.panel.active{display:block}
 
-/* ── BRASIL SECTION ── */
-.brasil-hero{background:linear-gradient(135deg,#063a1e 0%,#0d1117 60%);border:1px solid var(--brasil);border-radius:10px;padding:16px;margin-bottom:16px;}
-.brasil-title{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;color:#3dd68c;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.brasil-games{display:flex;flex-direction:column;gap:8px;}
-.brasil-game{background:rgba(0,156,59,.08);border:1px solid rgba(0,156,59,.3);border-radius:7px;padding:10px 12px;}
-.br-round{font-size:.65rem;font-weight:700;color:#3dd68c;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
-.br-match{font-size:1rem;font-weight:700;color:var(--txt);margin-bottom:5px;}
-.br-info{display:flex;flex-wrap:wrap;gap:6px;}
-.br-chip{font-size:.68rem;padding:2px 7px;border-radius:4px;background:var(--s2);border:1px solid var(--bdr);color:var(--txt2);}
-.br-chip.brt{background:var(--gold-bg);border-color:var(--gold);color:var(--gold2);font-weight:600;}
-.br-chip.local{background:var(--blu-bg);border-color:var(--blu);color:var(--blu);}
+/* ── SECTION TITLE ── */
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--bdr)}
 
-/* projeção eliminatórias */
-.fase-block{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-top:10px;}
-.fase-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
-.fase-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:.8rem;}
-.fase-row:last-child{border-bottom:none;}
-.fase-round{font-weight:700;color:var(--txt2);width:80px;flex-shrink:0;font-size:.72rem;}
-.fase-info{flex:1;line-height:1.6;color:var(--txt);}
-.fase-date{color:var(--txt2);font-size:.68rem;margin-top:2px;}
-
-/* odds section */
-.odds-section{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-top:10px;}
-.odds-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
-.odds-match{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bdr);}
-.odds-match:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.odds-match-name{font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--txt);}
-.odds-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
-.odd-box{background:var(--s2);border:1px solid var(--bdr);border-radius:5px;padding:6px 5px;text-align:center;}
-.odd-lbl{font-size:.62rem;color:var(--txt2);margin-bottom:2px;}
-.odd-val{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--txt);line-height:1;}
-.odd-bk{font-size:.58rem;color:var(--txt3);}
-.odd-box.fav{border-color:var(--gold);background:var(--gold-bg);}
-.odd-box.fav .odd-val{color:var(--gold2);}
-.odds-loading{color:var(--txt2);font-size:.78rem;padding:8px 0;}
-
-/* ── GRUPOS ── */
-.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
-.group-card{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
-.group-header{background:var(--s2);padding:8px 12px;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;}
-.group-table{width:100%;border-collapse:collapse;}
-.group-table th{font-size:.6rem;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;padding:5px 8px;text-align:right;font-weight:600;}
-.group-table th:first-child{text-align:left;}
-.group-table td{padding:6px 8px;font-size:.8rem;border-top:1px solid var(--bdr);}
-.group-table td:first-child{font-weight:600;}
-.group-table .brasil-row{background:rgba(0,156,59,.08);}
-.team-pos{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;color:var(--txt3);width:16px;display:inline-block;}
-.pos-1,.pos-2{color:var(--grn);}
-.pos-3{color:var(--orn);}
-.pts{font-weight:700;color:var(--txt);}
+/* ── BRASIL GAMES ── */
+.brasil-header{background:linear-gradient(135deg,#071c0e 0%,#0a1117 100%);border:1px solid rgba(0,156,59,.4);border-radius:10px;padding:14px;margin-bottom:14px}
+.bh-title{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:900;color:#4ade80;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.bh-subtitle{font-size:.72rem;color:rgba(74,222,128,.6);font-weight:400;letter-spacing:.1em}
+.brasil-game-card{background:rgba(0,156,59,.07);border:1px solid rgba(0,156,59,.25);border-radius:8px;padding:11px 14px;margin-bottom:8px;position:relative;overflow:hidden}
+.brasil-game-card.done{opacity:.75;border-color:rgba(0,156,59,.15)}
+.brasil-game-card.next{border-color:rgba(74,222,128,.5);box-shadow:0 0 16px rgba(0,156,59,.12)}
+.bgc-round{font-size:.65rem;font-weight:700;color:rgba(74,222,128,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.bgc-match{font-size:1rem;font-weight:700;color:var(--txt);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.bgc-score{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;color:#4ade80;min-width:50px}
+.bgc-result{font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:700}
+.result-W{background:rgba(63,185,80,.2);color:var(--grn);border:1px solid var(--grn)}
+.result-D{background:rgba(227,179,65,.2);color:var(--orn);border:1px solid var(--orn)}
+.result-L{background:rgba(248,81,73,.2);color:var(--red);border:1px solid var(--red)}
+.result-P{background:rgba(88,166,255,.1);color:var(--blu);border:1px solid var(--blu)}
+.bgc-info{display:flex;flex-wrap:wrap;gap:5px}
+.bchip{font-size:.67rem;padding:3px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+.bchip-brt{background:var(--gbg);border:1px solid var(--gold);color:var(--gold2);font-weight:600}
+.bchip-local{background:var(--bbg);border:1px solid var(--blu);color:var(--blu)}
+.bchip-venue{background:var(--s2);border:1px solid var(--bdr);color:var(--dim)}
+.bchip-next{background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.5);color:#4ade80;font-weight:700;animation:pulse 2s infinite}
+.next-badge{position:absolute;top:10px;right:12px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4ade80;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.4);padding:2px 7px;border-radius:4px}
 
 /* ── CHAVEAMENTO ── */
-.bracket-info{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:10px;}
-.bracket-phase{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.bracket-desc{font-size:.82rem;color:var(--txt2);line-height:1.6;}
-.bracket-brasil{border-left:3px solid var(--brasil);padding-left:10px;margin-top:10px;}
-.bracket-brasil-title{font-size:.78rem;font-weight:700;color:#3dd68c;margin-bottom:4px;}
+.bracket-container{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.bracket-phase-header{background:var(--s2);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr)}
+.bph-name{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.05em}
+.bph-date{font-size:.72rem;color:var(--dim)}
+.bracket-game{padding:12px 14px;border-bottom:1px solid var(--bdr);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+.bracket-game:last-child{border-bottom:none}
+.bracket-game.brasil-game{background:var(--brbg);border-left:3px solid var(--br)}
+.bracket-game.brasil-game.knockout{border-left:3px solid #4ade80}
+.bg-match-title{font-size:.88rem;font-weight:700;color:var(--txt);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.bg-match-title .brasil-tag{font-size:.62rem;background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.4);padding:1px 6px;border-radius:3px;font-weight:700}
+.bg-detail{font-size:.75rem;color:var(--dim);line-height:1.6}
+.bg-detail strong{color:var(--txt)}
+.bg-detail .scenario{display:block;margin-top:3px;font-size:.7rem;padding:3px 7px;background:var(--s2);border-radius:4px;border-left:2px solid var(--gold);color:var(--gold2)}
+.bg-detail .scenario.alt{border-left-color:var(--orn);color:var(--orn)}
+.bg-times{text-align:right;white-space:nowrap}
+.bg-brt{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold2);line-height:1.1}
+.bg-brt-sub{font-size:.62rem;color:var(--dim);margin-top:1px}
+.bracket-connector{padding:4px 14px;background:rgba(74,222,128,.04);border-bottom:1px solid rgba(0,156,59,.15)}
+.bc-text{font-size:.67rem;color:rgba(74,222,128,.5);font-style:italic}
+.status-pill{display:inline-block;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:7px}
+.sp-confirmed{background:var(--gbg2);color:var(--grn);border:1px solid var(--grn)}
+.sp-probable{background:var(--gbg);color:var(--gold2);border:1px solid var(--gold)}
+.sp-possible{background:var(--s2);color:var(--dim);border:1px solid var(--bdr)}
+.sp-tbd{background:var(--s3);color:var(--dim2);border:1px solid var(--bdr)}
 
-/* ── ALL MATCHES ── */
-.match-list{}
-.mrow{background:var(--s1);border:1px solid var(--bdr);border-radius:7px;padding:9px 11px;margin-bottom:6px;display:grid;grid-template-columns:60px 1fr auto auto;gap:8px;align-items:center;}
-.mrow.brasil-m{border-left:3px solid var(--brasil);}
-.mrow.done{opacity:.8;}
-.m-grp{font-size:.62rem;color:var(--txt2);font-weight:600;}
-.m-date{font-size:.6rem;color:var(--txt3);}
-.m-teams{font-size:.82rem;font-weight:600;}
-.m-time{text-align:right;}
-.m-time-local{font-size:.72rem;color:var(--txt2);}
-.m-time-br{font-size:.78rem;font-weight:600;color:var(--gold2);}
-.m-score{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;min-width:40px;}
-.m-score.done{color:var(--grn);}
-.status-badge{font-size:.6rem;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;}
-.badge-ft{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn);}
-.badge-pre{background:transparent;color:var(--txt3);border:1px solid var(--bdr);}
+/* Live score dentro do bracket */
+.bg-score{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:900;color:var(--grn);min-width:40px;text-align:right}
+.bg-score.live{color:var(--gold2);animation:pulse 1.5s infinite}
 
-/* ── COPA GERAL ── */
-.section-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px;display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--bdr);}
+/* ── GRUPOS ── */
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+.group-card{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;overflow:hidden}
+.group-card.has-brasil{border-color:rgba(0,156,59,.4)}
+.gh{background:var(--s2);padding:8px 12px;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--gold2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr)}
+.gt{width:100%;border-collapse:collapse;font-size:.78rem}
+.gt th{font-size:.58rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;padding:5px 8px;text-align:right;font-weight:600;border-bottom:1px solid var(--bdr)}
+.gt th:first-child{text-align:left}
+.gt td{padding:6px 8px;border-top:1px solid rgba(48,54,61,.5)}
+.gt td:first-child{font-weight:600;text-align:left}
+.gt td:not(:first-child){text-align:right;color:var(--dim)}
+.gt .pts{color:var(--txt)!important;font-weight:700!important}
+.gt .br-row{background:var(--brbg)}
+.gt .pos{font-size:.7rem;color:var(--dim2);margin-right:5px}
+.gt .pos.q1,.gt .pos.q2{color:var(--grn)}
+.gt .pos.q3{color:var(--orn)}
+.qual-legend{display:flex;gap:10px;padding:7px 10px;font-size:.62rem;color:var(--dim);border-top:1px solid var(--bdr);background:var(--s2)}
+.ql{display:flex;align-items:center;gap:4px}
+.ql::before{content:'';width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ql.q12::before{background:var(--grn)}
+.ql.q3::before{background:var(--orn)}
 
-.status-bar{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--bdr);border-radius:7px;padding:7px 12px;margin-bottom:12px;font-size:.72rem;color:var(--txt2);gap:8px;flex-wrap:wrap;}
-.status-bar.ok{border-color:var(--grn);background:var(--grn-bg);color:var(--grn);}
-.status-bar.err{border-color:var(--red);background:var(--red-bg);color:var(--red);}
+/* ── TODOS OS JOGOS ── */
+.day-block{margin-bottom:20px}
+.day-label{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em;padding:5px 0;border-bottom:1px solid var(--bdr);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.day-label span{font-size:.65rem;color:var(--dim);font-weight:400}
+.match-row{background:var(--s1);border:1px solid var(--bdr);border-radius:7px;padding:9px 12px;margin-bottom:5px;display:grid;grid-template-columns:50px 1fr auto auto;gap:8px;align-items:center;transition:border-color .12s}
+.match-row:hover{border-color:var(--bdr2)}
+.match-row.brasil{border-left:3px solid var(--br)}
+.mr-grp{font-size:.65rem;font-weight:700;color:var(--dim)}
+.mr-city{font-size:.58rem;color:var(--dim2)}
+.mr-teams{font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:5px}
+.mr-teams .br{color:#4ade80}
+.mr-score{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--grn);text-align:right;min-width:38px}
+.mr-score.pending{color:var(--dim2)}
+.mr-times{text-align:right}
+.mr-brt{font-size:.78rem;font-weight:600;color:var(--gold2)}
+.mr-local{font-size:.62rem;color:var(--dim)}
+.ft-badge{font-size:.58rem;font-weight:700;padding:2px 5px;border-radius:3px;background:var(--gbg2);color:var(--grn);border:1px solid var(--grn)}
+
+/* ── ODDS ── */
+.odds-card{background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:13px;margin-bottom:8px}
+.oc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+.oc-match{font-size:.9rem;font-weight:700;color:var(--txt)}
+.oc-date{font-size:.68rem;color:var(--dim);margin-top:2px}
+.oc-bk{font-size:.62rem;color:var(--dim2)}
+.odds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.odd-cell{background:var(--s2);border:1px solid var(--bdr);border-radius:5px;padding:7px 6px;text-align:center}
+.odd-cell.best{border-color:var(--gold);background:var(--gbg)}
+.odd-lbl{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.odd-val{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;color:var(--txt);line-height:1}
+.odd-cell.best .odd-val{color:var(--gold2)}
+.odds-empty{color:var(--dim);font-size:.8rem;text-align:center;padding:20px;background:var(--s1);border:1px solid var(--bdr);border-radius:8px}
+
+/* ── STATUS BAR ── */
+.sbar{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--bdr);border-radius:7px;padding:7px 11px;margin-bottom:12px;font-size:.7rem;color:var(--dim);gap:8px;flex-wrap:wrap}
+.sbar.ok{border-color:var(--grn);background:var(--gbg2);color:var(--grn)}
+.sbar.err{border-color:var(--red);background:var(--rbg);color:var(--red)}
+.sbar.loading{border-color:var(--gold);background:var(--gbg);color:var(--gold2)}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">⚽ COPA 26 <span>// Grupos & Chave</span></div>
-  <a href="index.html" class="btn">← Bolão</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="sync-info">
+      <div class="sync-dot" id="hdot"></div>
+      <span id="hlbl">Carregando...</span>
+    </div>
+    <a href="index.html" class="btn-back">← Bolão</a>
+  </div>
 </header>
 <div class="nav">
   <button class="ntab active" onclick="showTab('brasil')">🇧🇷 Brasil</button>
   <button class="ntab" onclick="showTab('grupos')">Grupos</button>
-  <button class="ntab" onclick="showTab('jogos')">Todos os Jogos</button>
-  <button class="ntab" onclick="showTab('odds')">Odds ao Vivo</button>
+  <button class="ntab" onclick="showTab('jogos')">Jogos</button>
+  <button class="ntab" onclick="showTab('odds')">Odds</button>
 </div>
 
-<!-- ══ ABA BRASIL ══ -->
 <div id="tab-brasil" class="panel active">
-
-  <div class="brasil-hero">
-    <div class="brasil-title">🇧🇷 Brasil · Grupo C</div>
-    <div class="brasil-games">
-      <div class="brasil-game">
-        <div class="br-round">1ª Rodada · Jogo 1 do Bolão</div>
-        <div class="br-match">Brasil vs Marrocos</div>
-        <div class="br-info">
-          <span class="br-chip brt">🇧🇷 19:00 BRT</span>
-          <span class="br-chip local">🏟 16:00 ET (Nova York)</span>
-          <span class="br-chip">📅 Sáb 13/06</span>
-          <span class="br-chip">MetLife Stadium · NJ</span>
-        </div>
-      </div>
-      <div class="brasil-game">
-        <div class="br-round">2ª Rodada</div>
-        <div class="br-match">Brasil vs Haiti</div>
-        <div class="br-info">
-          <span class="br-chip brt">🇧🇷 21:30 BRT</span>
-          <span class="br-chip local">🏟 18:30 ET (Filadélfia)</span>
-          <span class="br-chip">📅 Sex 19/06</span>
-          <span class="br-chip">Lincoln Financial Field · PA</span>
-        </div>
-      </div>
-      <div class="brasil-game">
-        <div class="br-round">3ª Rodada</div>
-        <div class="br-match">Escócia vs Brasil</div>
-        <div class="br-info">
-          <span class="br-chip brt">🇧🇷 19:00 BRT</span>
-          <span class="br-chip local">🏟 16:00 ET (Miami)</span>
-          <span class="br-chip">📅 Qua 24/06</span>
-          <span class="br-chip">Hard Rock Stadium · FL</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-title">Hipóteses de Chaveamento</div>
-
-  <div class="fase-block">
-    <div class="fase-title">🗺️ Projeção do Caminho — se avançar</div>
-
-    <div class="fase-row">
-      <div class="fase-round">Rodada de 32</div>
-      <div class="fase-info">
-        <strong>29 ou 30/06</strong> — Adversário do Grupo F (2º ou 3º colocado)
-        <div style="margin-top:4px;font-size:.75rem;color:var(--txt2)">
-          Grupo F: Holanda, Japão, Suécia, Tunísia<br>
-          <span style="color:var(--orn)">Se Brasil for 1º do C:</span> enfrenta 2º do F (provável Japão/Suécia)<br>
-          <span style="color:var(--orn)">Se Brasil for 2º do C:</span> pode pegar 1º do F (Holanda)
-        </div>
-        <div class="fase-date">📍 Local a definir conforme classificação</div>
-      </div>
-    </div>
-
-    <div class="fase-row">
-      <div class="fase-round">Oitavas</div>
-      <div class="fase-info">
-        <strong>~04-06/07</strong> — Cruzamento com vencedor de outro lado do chaveamento
-        <div style="margin-top:4px;font-size:.75rem;color:var(--txt2)">
-          Possíveis adversários: Espanha, Uruguai ou time do Grupo G
-        </div>
-      </div>
-    </div>
-
-    <div class="fase-row">
-      <div class="fase-round">Quartas</div>
-      <div class="fase-info">
-        <strong>~09-11/07</strong>
-        <div style="margin-top:4px;font-size:.75rem;color:var(--txt2)">
-          Projeção: <strong>Inglaterra</strong> (líder do Grupo L)
-        </div>
-      </div>
-    </div>
-
-    <div class="fase-row">
-      <div class="fase-round">Semifinal</div>
-      <div class="fase-info">
-        <strong>~15/07</strong>
-        <div style="margin-top:4px;font-size:.75rem;color:var(--txt2)">
-          Projeção: <strong>Argentina</strong> (Grupo J) — clássico sul-americano
-        </div>
-      </div>
-    </div>
-
-    <div class="fase-row">
-      <div class="fase-round">Final</div>
-      <div class="fase-info">
-        <strong>19/07 · MetLife Stadium, Nova Jersey</strong>
-        <div style="margin-top:4px;font-size:.75rem;color:var(--txt2)">
-          Favoritos do outro lado do chaveamento: França ou Espanha
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-title">Odds do Grupo C</div>
-  <div class="odds-section">
-    <div class="odds-title">
-      <span>Brasil nos próximos jogos</span>
-      <span style="font-size:.65rem;font-weight:400;color:var(--txt2)" id="odds-updated">Carregando...</span>
-    </div>
-    <div id="brasil-odds"><div class="odds-loading">Buscando odds em tempo real...</div></div>
-  </div>
-
+  <div class="sbar" id="brasil-status">Carregando dados...</div>
+  <div id="brasil-games-section"></div>
+  <div id="brasil-bracket-section"></div>
 </div>
 
-<!-- ══ ABA GRUPOS ══ -->
 <div id="tab-grupos" class="panel">
-  <div class="status-bar" id="grupos-status">Carregando classificação...</div>
-  <div class="groups-grid" id="groups-grid"></div>
+  <div class="sbar" id="grupos-status">Carregando...</div>
+  <div id="groups-grid" class="groups-grid"></div>
 </div>
 
-<!-- ══ ABA TODOS OS JOGOS ══ -->
 <div id="tab-jogos" class="panel">
-  <div class="status-bar" id="jogos-status">Carregando partidas...</div>
+  <div class="sbar" id="jogos-status">Carregando partidas...</div>
   <div id="all-matches"></div>
 </div>
 
-<!-- ══ ABA ODDS ══ -->
 <div id="tab-odds" class="panel">
-  <div class="status-bar" id="odds-status">Carregando odds...</div>
+  <div class="sbar" id="odds-status">Carregando odds...</div>
   <div id="all-odds"></div>
 </div>
 
 <script>
-// ── DADOS ESTÁTICOS DOS GRUPOS ─────────────────────────────────────────────
-const GROUPS = {
-  A:{teams:['México','Coreia do Sul','Rep. Tcheca','África do Sul']},
-  B:{teams:['Suíça','Canadá','Bósnia e Herz.','Qatar']},
-  C:{teams:['Brasil','Marrocos','Escócia','Haiti']},
-  D:{teams:['EUA','Paraguai','Austrália','Turquia']},
-  E:{teams:['Alemanha','Costa do Marfim','Equador','Curaçao']},
-  F:{teams:['Holanda','Japão','Suécia','Tunísia']},
-  G:{teams:['Bélgica','Egito','Irã','Nova Zelândia']},
-  H:{teams:['Espanha','Uruguai','Ar. Saudita','Cabo Verde']},
-  I:{teams:['França','Senegal','Iraque','Noruega']},
-  J:{teams:['Argentina','Argélia','Jordânia','Turquemenistão']},
-  K:{teams:['Portugal','Congo DR','Uzbequistão','Áustria']},
-  L:{teams:['Inglaterra','Croácia','Gana','Panamá']},
+// ─────────────────────────────────────────────────────────────────────────────
+// DADOS FIXOS DO TORNEIO (estrutura oficial FIFA 2026)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Grupos com seleções
+const GROUPS_DEF = {
+  A:{t:['México','Coreia do Sul','Rep. Tcheca','África do Sul']},
+  B:{t:['Suíça','Canadá','Bósnia e Herz.','Qatar']},
+  C:{t:['Brasil','Marrocos','Escócia','Haiti']},
+  D:{t:['EUA','Paraguai','Austrália','Turquia']},
+  E:{t:['Alemanha','C. do Marfim','Equador','Curaçao']},
+  F:{t:['Holanda','Japão','Suécia','Tunísia']},
+  G:{t:['Bélgica','Egito','Irã','Nova Zelândia']},
+  H:{t:['Espanha','Uruguai','Ar. Saudita','Cabo Verde']},
+  I:{t:['França','Senegal','Iraque','Noruega']},
+  J:{t:['Argentina','Argélia','Jordânia','Turquemenistão']},
+  K:{t:['Portugal','Congo DR','Uzbequistão','Áustria']},
+  L:{t:['Inglaterra','Croácia','Gana','Panamá']},
 };
 
-// Jogos da Copa com horários BRT e local
-const ALL_GAMES = [
+// Todos os jogos com horário BRT e local
+// estado: pre | in | post (atualizado via openfootball)
+const ALL_MATCHES_DEF = [
   // Grupo A
-  {id:101,grp:'A',date:'2026-06-11',localT:'16:00',zone:'UTC-6 (CDMX)',brT:'16:00 BRT',t1:'México',t2:'África do Sul',city:'Cidade do México'},
-  {id:102,grp:'A',date:'2026-06-11',localT:'20:00',zone:'UTC-6 (GDL)',brT:'23:00 BRT',t1:'Coreia do Sul',t2:'Rep. Tcheca',city:'Guadalajara'},
-  {id:103,grp:'A',date:'2026-06-18',localT:'12:00',zone:'ET',brT:'15:00 BRT',t1:'Rep. Tcheca',t2:'África do Sul',city:'Atlanta'},
-  {id:104,grp:'A',date:'2026-06-18',localT:'19:00',zone:'UTC-6 (GDL)',brT:'22:00 BRT',t1:'México',t2:'Coreia do Sul',city:'Guadalajara'},
-  {id:105,grp:'A',date:'2026-06-22',localT:'18:00',zone:'ET',brT:'19:00 BRT',t1:'México',t2:'Rep. Tcheca',city:'Dallas'},
-  {id:106,grp:'A',date:'2026-06-22',localT:'18:00',zone:'ET',brT:'19:00 BRT',t1:'Coreia do Sul',t2:'África do Sul',city:'Kansas City'},
+  {id:'A1',g:'A',d:'2026-06-11',brt:'16:00',loc:'13:00 UTC-6',city:'Cidade do México',t1:'México',t2:'África do Sul',wc:['Mexico','South Africa']},
+  {id:'A2',g:'A',d:'2026-06-11',brt:'23:00',loc:'20:00 UTC-6',city:'Guadalajara',t1:'Coreia do Sul',t2:'Rep. Tcheca',wc:['South Korea','Czech Republic']},
+  {id:'A3',g:'A',d:'2026-06-18',brt:'15:00',loc:'12:00 ET',city:'Atlanta',t1:'Rep. Tcheca',t2:'África do Sul',wc:['Czech Republic','South Africa']},
+  {id:'A4',g:'A',d:'2026-06-18',brt:'22:00',loc:'19:00 UTC-6',city:'Guadalajara',t1:'México',t2:'Coreia do Sul',wc:['Mexico','South Korea']},
+  {id:'A5',g:'A',d:'2026-06-22',brt:'19:00',loc:'16:00 ET',city:'Dallas',t1:'México',t2:'Rep. Tcheca',wc:['Mexico','Czech Republic']},
+  {id:'A6',g:'A',d:'2026-06-22',brt:'22:00',loc:'19:00 ET',city:'Kansas City',t1:'Coreia do Sul',t2:'África do Sul',wc:['South Korea','South Africa']},
   // Grupo B
-  {id:107,grp:'B',date:'2026-06-12',localT:'13:00',zone:'ET (Toronto)',brT:'14:00 BRT',t1:'Canadá',t2:'Bósnia e Herz.',city:'Toronto'},
-  {id:108,grp:'B',date:'2026-06-12',localT:'19:00',zone:'PT',brT:'23:00 BRT',t1:'EUA',t2:'Paraguai',city:'Los Angeles'},
-  {id:109,grp:'B',date:'2026-06-12',localT:'22:00',zone:'ET',brT:'23:00 BRT',t1:'Suíça',t2:'Qatar',city:'São Francisco'},
-  // Grupo C — Brasil
-  {id:110,grp:'C',date:'2026-06-13',localT:'16:00',zone:'ET (Nova York)',brT:'19:00 BRT',t1:'Brasil',t2:'Marrocos',city:'Nova York/NJ',brasil:true},
-  {id:111,grp:'C',date:'2026-06-13',localT:'19:00',zone:'ET (Boston)',brT:'22:00 BRT',t1:'Haiti',t2:'Escócia',city:'Boston'},
-  {id:112,grp:'C',date:'2026-06-19',localT:'18:30',zone:'ET (Filadélfia)',brT:'21:30 BRT',t1:'Brasil',t2:'Haiti',city:'Filadélfia',brasil:true},
-  {id:113,grp:'C',date:'2026-06-19',localT:'15:00',zone:'ET (Boston)',brT:'18:00 BRT',t1:'Marrocos',t2:'Escócia',city:'Boston'},
-  {id:114,grp:'C',date:'2026-06-24',localT:'16:00',zone:'ET (Miami)',brT:'19:00 BRT',t1:'Escócia',t2:'Brasil',city:'Miami',brasil:true},
-  {id:115,grp:'C',date:'2026-06-24',localT:'16:00',zone:'ET',brT:'19:00 BRT',t1:'Marrocos',t2:'Haiti',city:'Nova York/NJ'},
-  // Grupos D-L (abreviados com datas)
-  {id:201,grp:'D',date:'2026-06-14',localT:'16:00',zone:'PT',brT:'20:00 BRT',t1:'EUA',t2:'Paraguai',city:'Los Angeles'},
-  {id:202,grp:'E',date:'2026-06-14',localT:'14:00',zone:'CT',brT:'17:00 BRT',t1:'Alemanha',t2:'Curaçao',city:'Houston'},
-  {id:203,grp:'F',date:'2026-06-14',localT:'17:00',zone:'CT',brT:'20:00 BRT',t1:'Holanda',t2:'Japão',city:'Dallas'},
-  {id:204,grp:'E',date:'2026-06-14',localT:'20:00',zone:'ET',brT:'23:00 BRT',t1:'C. do Marfim',t2:'Equador',city:'Filadélfia'},
-  {id:205,grp:'F',date:'2026-06-15',localT:'23:00',zone:'CT',brT:'02:00 BRT',t1:'Suécia',t2:'Tunísia',city:'Monterrey'},
-  {id:206,grp:'H',date:'2026-06-15',localT:'13:00',zone:'ET',brT:'16:00 BRT',t1:'Espanha',t2:'Cabo Verde',city:'Atlanta'},
-  {id:207,grp:'G',date:'2026-06-15',localT:'16:00',zone:'PT',brT:'21:00 BRT',t1:'Bélgica',t2:'Egito',city:'Seattle'},
-  {id:208,grp:'H',date:'2026-06-15',localT:'19:00',zone:'ET',brT:'22:00 BRT',t1:'Ar. Saudita',t2:'Uruguai',city:'Miami'},
-  {id:209,grp:'I',date:'2026-06-16',localT:'16:00',zone:'ET',brT:'19:00 BRT',t1:'França',t2:'Senegal',city:'Nova York/NJ'},
-  {id:210,grp:'I',date:'2026-06-16',localT:'19:00',zone:'ET',brT:'22:00 BRT',t1:'Iraque',t2:'Noruega',city:'Boston'},
-  {id:211,grp:'J',date:'2026-06-17',localT:'22:00',zone:'CT',brT:'01:00 BRT',t1:'Argentina',t2:'Argélia',city:'Kansas City'},
-  {id:212,grp:'K',date:'2026-06-17',localT:'14:00',zone:'CT',brT:'17:00 BRT',t1:'Portugal',t2:'Congo DR',city:'Houston'},
-  {id:213,grp:'L',date:'2026-06-17',localT:'17:00',zone:'CT',brT:'20:00 BRT',t1:'Inglaterra',t2:'Croácia',city:'Dallas'},
+  {id:'B1',g:'B',d:'2026-06-12',brt:'14:00',loc:'13:00 ET',city:'Toronto',t1:'Canadá',t2:'Bósnia e Herz.',wc:['Canada','Bosnia and Herzegovina']},
+  {id:'B2',g:'B',d:'2026-06-12',brt:'22:00',loc:'19:00 PT',city:'Los Angeles',t1:'EUA',t2:'Paraguai',wc:['USA','Paraguay']},
+  {id:'B3',g:'B',d:'2026-06-12',brt:'23:00',loc:'20:00 PT',city:'São Francisco',t1:'Suíça',t2:'Qatar',wc:['Switzerland','Qatar']},
+  // Grupo C — Brasil ★
+  {id:'C1',g:'C',d:'2026-06-13',brt:'19:00',loc:'16:00 ET',city:'Nova York/NJ',t1:'Brasil',t2:'Marrocos',wc:['Brazil','Morocco'],brasil:true},
+  {id:'C2',g:'C',d:'2026-06-13',brt:'22:00',loc:'19:00 ET',city:'Boston',t1:'Haiti',t2:'Escócia',wc:['Haiti','Scotland']},
+  {id:'C3',g:'C',d:'2026-06-19',brt:'21:30',loc:'18:30 ET',city:'Filadélfia',t1:'Brasil',t2:'Haiti',wc:['Brazil','Haiti'],brasil:true},
+  {id:'C4',g:'C',d:'2026-06-19',brt:'18:00',loc:'15:00 ET',city:'Boston',t1:'Marrocos',t2:'Escócia',wc:['Morocco','Scotland']},
+  {id:'C5',g:'C',d:'2026-06-24',brt:'19:00',loc:'16:00 ET',city:'Miami',t1:'Escócia',t2:'Brasil',wc:['Scotland','Brazil'],brasil:true},
+  {id:'C6',g:'C',d:'2026-06-24',brt:'22:00',loc:'19:00 ET',city:'Nova York/NJ',t1:'Marrocos',t2:'Haiti',wc:['Morocco','Haiti']},
+  // Grupos D-L (resumidos)
+  {id:'D1',g:'D',d:'2026-06-14',brt:'17:00',loc:'14:00 CT',city:'Houston',t1:'Alemanha',t2:'Curaçao',wc:['Germany','Curaçao']},
+  {id:'E1',g:'E',d:'2026-06-14',brt:'20:00',loc:'17:00 CT',city:'Dallas',t1:'Holanda',t2:'Japão',wc:['Netherlands','Japan']},
+  {id:'E2',g:'E',d:'2026-06-14',brt:'23:00',loc:'20:00 ET',city:'Filadélfia',t1:'C. do Marfim',t2:'Equador',wc:["Côte d'Ivoire",'Ecuador']},
+  {id:'F1',g:'F',d:'2026-06-15',brt:'02:00',loc:'23:00 CT',city:'Monterrey',t1:'Suécia',t2:'Tunísia',wc:['Sweden','Tunisia']},
+  {id:'G1',g:'G',d:'2026-06-15',brt:'16:00',loc:'13:00 ET',city:'Atlanta',t1:'Espanha',t2:'Cabo Verde',wc:['Spain','Cape Verde']},
+  {id:'G2',g:'G',d:'2026-06-15',brt:'21:00',loc:'16:00 PT',city:'Seattle',t1:'Bélgica',t2:'Egito',wc:['Belgium','Egypt']},
+  {id:'H1',g:'H',d:'2026-06-15',brt:'22:00',loc:'19:00 ET',city:'Miami',t1:'Ar. Saudita',t2:'Uruguai',wc:['Saudi Arabia','Uruguay']},
+  {id:'I1',g:'I',d:'2026-06-16',brt:'19:00',loc:'16:00 ET',city:'Nova York/NJ',t1:'França',t2:'Senegal',wc:['France','Senegal']},
+  {id:'I2',g:'I',d:'2026-06-16',brt:'22:00',loc:'19:00 ET',city:'Boston',t1:'Iraque',t2:'Noruega',wc:['Iraq','Norway']},
+  {id:'J1',g:'J',d:'2026-06-17',brt:'01:00',loc:'22:00 CT',city:'Kansas City',t1:'Argentina',t2:'Argélia',wc:['Argentina','Algeria']},
+  {id:'K1',g:'K',d:'2026-06-17',brt:'17:00',loc:'14:00 CT',city:'Houston',t1:'Portugal',t2:'Congo DR',wc:['Portugal','DR Congo']},
+  {id:'L1',g:'L',d:'2026-06-17',brt:'20:00',loc:'17:00 CT',city:'Dallas',t1:'Inglaterra',t2:'Croácia',wc:['England','Croatia']},
 ];
 
-// Pontuação estática até agora (atualizado manualmente a partir de openfootball)
-const STANDINGS = {
-  A:[
-    {t:'México',j:1,v:1,e:0,d:0,gp:2,gc:0,pts:3},
-    {t:'Coreia do Sul',j:1,v:1,e:0,d:0,gp:2,gc:1,pts:3},
-    {t:'Rep. Tcheca',j:1,v:0,e:0,d:1,gp:1,gc:2,pts:0},
-    {t:'África do Sul',j:1,v:0,e:0,d:1,gp:0,gc:2,pts:0},
-  ],
-  C:[
-    {t:'Brasil',j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0},
-    {t:'Marrocos',j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0},
-    {t:'Escócia',j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0},
-    {t:'Haiti',j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0},
-  ],
-};
+// Chaveamento fixo da FIFA 2026 (estrutura imutável)
+// Rodada de 32: 16 jogos, datas 28/jun–03/jul
+// Slot: qual posição de grupo enfrenta quem
+const BRACKET_SLOTS = [
+  // Rodada de 32 — chaveamento oficial FIFA
+  {slot:'R32-1', date:'2026-06-28', brt:'17:00', loc:'14:00 CT', city:'Houston', stadium:'NRG Stadium',
+   h:{group:'C',pos:1}, a:{group:'F',pos:2}, note:'Brasil (1ºC) vs 2ºF'},
+  {slot:'R32-2', date:'2026-06-28', brt:'20:00', loc:'17:00 ET', city:'Nova York/NJ', stadium:'MetLife Stadium',
+   h:{group:'A',pos:1}, a:{group:'D',pos:2}},
+  {slot:'R32-3', date:'2026-06-29', brt:'14:00', loc:'11:00 PT', city:'Los Angeles', stadium:'SoFi Stadium',
+   h:{group:'B',pos:1}, a:{group:'E',pos:2}},
+  {slot:'R32-4', date:'2026-06-29', brt:'17:00', loc:'14:00 CT', city:'Dallas', stadium:'AT&T Stadium',
+   h:{group:'K',pos:1}, a:{group:'H',pos:2}},
+  {slot:'R32-5', date:'2026-06-29', brt:'20:00', loc:'17:00 ET', city:'Filadélfia', stadium:'Lincoln Financial Field',
+   h:{group:'J',pos:1}, a:{group:'I',pos:2}},
+  {slot:'R32-6', date:'2026-06-30', brt:'17:00', loc:'14:00 ET', city:'Boston', stadium:'Gillette Stadium',
+   h:{group:'C',pos:2}, a:{group:'F',pos:1}, note:'2ºC vs Holanda (1ºF prov.)'},
+  {slot:'R32-7', date:'2026-06-30', brt:'20:00', loc:'17:00 ET', city:'Miami', stadium:'Hard Rock Stadium',
+   h:{group:'H',pos:1}, a:{group:'K',pos:2}},
+  {slot:'R32-8', date:'2026-06-30', brt:'23:00', loc:'20:00 ET', city:'Atlanta', stadium:'Mercedes-Benz Stadium',
+   h:{group:'G',pos:1}, a:{group:'J',pos:2}},
+  // Oitavas (Round of 16)
+  {slot:'R16-1', date:'2026-07-04', brt:'17:00', loc:'14:00 ET', city:'Nova York/NJ', stadium:'MetLife Stadium',
+   feedsFrom:['R32-1','R32-3'], note:'Vencedor R32-1 (Brasil 1ºC) vs Vencedor R32-3'},
+  {slot:'R16-2', date:'2026-07-05', brt:'17:00', loc:'14:00 CT', city:'Kansas City', stadium:'Arrowhead Stadium',
+   feedsFrom:['R32-2','R32-4']},
+  {slot:'R16-3', date:'2026-07-05', brt:'20:00', loc:'17:00 CT', city:'Houston', stadium:'NRG Stadium',
+   feedsFrom:['R32-5','R32-7']},
+  {slot:'R16-4', date:'2026-07-06', brt:'20:00', loc:'17:00 ET', city:'Miami', stadium:'Hard Rock Stadium',
+   feedsFrom:['R32-6','R32-8']},
+  // Quartas
+  {slot:'QF-1', date:'2026-07-09', brt:'21:00', loc:'18:00 ET', city:'Nova York/NJ', stadium:'MetLife Stadium',
+   feedsFrom:['R16-1','R16-2'], note:'Provável: Brasil vs Espanha/Uruguai'},
+  {slot:'QF-2', date:'2026-07-10', brt:'21:00', loc:'18:00 CT', city:'Dallas', stadium:'AT&T Stadium',
+   feedsFrom:['R16-3','R16-4']},
+  // Semis
+  {slot:'SF-1', date:'2026-07-15', brt:'21:00', loc:'18:00 ET', city:'Nova York/NJ', stadium:'MetLife Stadium',
+   feedsFrom:['QF-1','QF-2'], note:'Provável: Brasil vs Argentina'},
+  // Final
+  {slot:'F', date:'2026-07-19', brt:'17:00', loc:'14:00 ET', city:'Nova York/NJ', stadium:'MetLife Stadium — FINAL',
+   feedsFrom:['SF-1','SF-2'], note:'19 de julho · MetLife Stadium'},
+];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ESTADO DINÂMICO
+// ─────────────────────────────────────────────────────────────────────────────
+let wcData = null;      // {matches:[...]} from openfootball
 let oddsData = [];
+let groupStandings = {};// computed from wcData
+let matchResults = {};  // wcId -> {g1,g2,state}
+let lastSync = null;
 
-// ── RENDER GRUPOS ──────────────────────────────────────────────────────────
-function renderGrupos(){
-  const grid = document.getElementById('groups-grid');
-  grid.innerHTML = '';
-  Object.entries(GROUPS).forEach(([letter, info]) => {
-    const standing = STANDINGS[letter];
-    const card = document.createElement('div');
-    card.className = 'group-card';
-    let rows = '';
-    const teams = standing
-      ? [...standing].sort((a,b)=>b.pts-a.pts||(b.gp-b.gc)-(a.gp-a.gc))
-      : info.teams.map(t=>({t,j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0}));
-
-    teams.forEach((tm,idx)=>{
-      const name = typeof tm==='string'?tm:tm.t;
-      const isBrasil = name==='Brasil';
-      const posClass = idx===0?'pos-1':idx===1?'pos-2':idx===2?'pos-3':'';
-      if(standing){
-        rows += `<tr class="${isBrasil?'brasil-row':''}">
-          <td><span class="team-pos ${posClass}">${idx+1}.</span> ${name}</td>
-          <td style="text-align:center">${tm.j}</td>
-          <td style="text-align:center;color:var(--grn)">${tm.v}</td>
-          <td style="text-align:center;color:var(--orn)">${tm.e}</td>
-          <td style="text-align:center;color:var(--red)">${tm.d}</td>
-          <td style="text-align:center">${tm.gp}:${tm.gc}</td>
-          <td style="text-align:center"><span class="pts">${tm.pts}</span></td>
-        </tr>`;
-      } else {
-        rows += `<tr class="${isBrasil?'brasil-row':''}"><td colspan="7"><span class="team-pos">${idx+1}.</span> ${name}</td></tr>`;
-      }
-    });
-    card.innerHTML = `
-      <div class="group-header">Grupo ${letter} ${letter==='C'?'🇧🇷':''}</div>
-      <table class="group-table">
-        <thead><tr>
-          <th>Seleção</th>
-          <th>J</th><th>V</th><th>E</th><th>D</th><th>GF:GC</th><th>Pts</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>`;
-    grid.appendChild(card);
-  });
-  document.getElementById('grupos-status').className='status-bar ok';
-  document.getElementById('grupos-status').textContent='✓ Grupos carregados · Atualização automática durante a Copa';
-}
-
-// ── RENDER TODOS OS JOGOS ──────────────────────────────────────────────────
-function renderTodosJogos(){
-  const el = document.getElementById('all-matches');
-  // agrupar por data
-  const byDay={},dO=[];
-  ALL_GAMES.forEach(g=>{
-    if(!byDay[g.date]){byDay[g.date]=[];dO.push(g.date);}
-    byDay[g.date].push(g);
-  });
+// ─────────────────────────────────────────────────────────────────────────────
+// FUNÇÕES AUXILIARES
+// ─────────────────────────────────────────────────────────────────────────────
+function fmtDate(d){
+  if(!d)return'';
+  const[y,m,dd]=d.split('-');
   const D=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  let html='';
-  dO.forEach(dk=>{
-    const [y,m,d]=dk.split('-');
-    const dayName=D[new Date(+y,+m-1,+d).getDay()];
-    html+=`<div class="section-title">${dayName} ${d}/${m}</div>`;
-    byDay[dk].forEach(g=>{
-      const isBrasil=!!g.brasil;
-      html+=`<div class="mrow${isBrasil?' brasil-m':''}">
-        <div>
-          <div class="m-grp">Gr.${g.grp}</div>
-          <div class="m-date">${g.city}</div>
+  const dt=new Date(+y,+m-1,+dd);
+  return`${D[dt.getDay()]} ${dd}/${m}`;
+}
+function today(){return new Date().toISOString().slice(0,10);}
+function toBRDate(utc){return new Date(utc).toLocaleDateString('sv',{timeZone:'America/Sao_Paulo'});}
+
+function setHeader(state,msg){
+  document.getElementById('hdot').className='sync-dot'+(state==='ok'?' ok':state==='loading'?' loading':state==='err'?' err':'');
+  document.getElementById('hlbl').textContent=msg;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FETCH & PARSE
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchWC(){
+  const r=await fetch('/api/wc');
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+async function fetchOdds(){
+  const r=await fetch('/api/odds');
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+// Mapear nomes do openfootball para as chaves internas
+const WC_NAME_MAP = {
+  'Brazil':'Brasil','Morocco':'Marrocos','Haiti':'Haiti','Scotland':'Escócia',
+  'Germany':'Alemanha','Curaçao':'Curaçao','Netherlands':'Holanda','Japan':'Japão',
+  "Côte d'Ivoire":'C. do Marfim','Ecuador':'Equador','Sweden':'Suécia','Tunisia':'Tunísia',
+  'Spain':'Espanha','Cape Verde':'Cabo Verde','Belgium':'Bélgica','Egypt':'Egito',
+  'Saudi Arabia':'Ar. Saudita','Uruguay':'Uruguai','France':'França','Senegal':'Senegal',
+  'Iraq':'Iraque','Norway':'Noruega','Argentina':'Argentina','Algeria':'Argélia',
+  'Portugal':'Portugal','DR Congo':'Congo DR','England':'Inglaterra','Croatia':'Croácia',
+  'Mexico':'México','South Africa':'África do Sul','South Korea':'Coreia do Sul',
+  'Czech Republic':'Rep. Tcheca','Canada':'Canadá','USA':'EUA','Switzerland':'Suíça',
+  'Qatar':'Qatar','Paraguay':'Paraguai','Australia':'Austrália','Turkey':'Turquia',
+  'Ghana':'Gana','Panama':'Panamá','Iran':'Irã','New Zealand':'Nova Zelândia',
+  'Jordan':'Jordânia','Bosnia and Herzegovina':'Bósnia e Herz.',
+};
+function wcName(n){return WC_NAME_MAP[n]||n;}
+
+// Parse matches e compute standings
+function parseAndCompute(data){
+  const matches = data.matches || [];
+  // reset
+  matchResults = {};
+  groupStandings = {};
+  Object.keys(GROUPS_DEF).forEach(g=>{
+    groupStandings[g] = GROUPS_DEF[g].t.map(t=>({t,j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0,sg:0}));
+  });
+
+  matches.forEach((m,idx)=>{
+    const ft=m.score&&m.score.ft;
+    const has=!!(ft&&ft.length===2);
+    const t1=wcName(m.team1), t2=wcName(m.team2);
+    const g1=has?ft[0]:null, g2=has?ft[1]:null;
+    // match to ALL_MATCHES_DEF
+    const def=ALL_MATCHES_DEF.find(d=>d.wc&&((d.wc[0]===m.team1&&d.wc[1]===m.team2)||(d.wc[1]===m.team1&&d.wc[0]===m.team2)));
+    if(def){
+      const normal = def.wc[0]===m.team1;
+      matchResults[def.id]={
+        g1: normal?(g1!=null?String(g1):null):(g2!=null?String(g2):null),
+        g2: normal?(g2!=null?String(g2):null):(g1!=null?String(g1):null),
+        state: has?'post':'pre',
+      };
+    }
+    // update standings
+    if(!has)return;
+    const grp=m.group&&m.group.replace(/Group\s+/i,'');
+    if(!grp||!groupStandings[grp])return;
+    const s=groupStandings[grp];
+    const r1=s.find(r=>r.t===t1), r2=s.find(r=>r.t===t2);
+    if(!r1||!r2)return;
+    r1.j++;r2.j++;r1.gp+=g1;r2.gp+=g2;r1.gc+=g2;r2.gc+=g1;r1.sg+=g1-g2;r2.sg+=g2-g1;
+    if(g1>g2){r1.v++;r1.pts+=3;r2.d++;}
+    else if(g1<g2){r2.v++;r2.pts+=3;r1.d++;}
+    else{r1.e++;r2.e++;r1.pts++;r2.pts++;}
+  });
+  // ordenar cada grupo
+  Object.keys(groupStandings).forEach(g=>{
+    groupStandings[g].sort((a,b)=>b.pts-a.pts||b.sg-a.sg||b.gp-a.gp);
+  });
+}
+
+// Dado um slot, retorna o nome do time (se já definido pelos resultados)
+function slotTeam(slotRef, pos){
+  if(!slotRef)return null;
+  const st=groupStandings[slotRef];
+  if(!st||!st[pos-1])return null;
+  return st[pos-1].t;
+}
+
+// Obter resultado do jogo do Brasil por rodada
+function getBrasilMatch(matchId){
+  const r=matchResults[matchId];
+  const def=ALL_MATCHES_DEF.find(d=>d.id===matchId);
+  if(!def||!r)return null;
+  const isBrasilHome=def.t1==='Brasil'||def.t1==='Brazil';
+  const brasilGoals=isBrasilHome?r.g1:r.g2;
+  const opGoals=isBrasilHome?r.g2:r.g1;
+  let result=null;
+  if(r.state==='post'&&brasilGoals!=null&&opGoals!=null){
+    const bg=+brasilGoals,og=+opGoals;
+    result=bg>og?'W':bg===og?'D':'L';
+  }
+  return{...r, result, brasilGoals, opGoals};
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER BRASIL
+// ─────────────────────────────────────────────────────────────────────────────
+function renderBrasil(){
+  const BRASIL_MATCHES=[
+    {id:'C1',round:'1ª Rodada · Grupo C',opponent:'Marrocos',home:true},
+    {id:'C3',round:'2ª Rodada · Grupo C',opponent:'Haiti',home:true},
+    {id:'C5',round:'3ª Rodada · Grupo C',opponent:'Escócia (mandante)',home:false},
+  ];
+  const td=today();
+  let gamesHtml='<div class="section-title">Fase de Grupos</div>';
+  BRASIL_MATCHES.forEach((bm,idx)=>{
+    const def=ALL_MATCHES_DEF.find(d=>d.id===bm.id);
+    const r=getBrasilMatch(bm.id);
+    const isDone=r&&r.state==='post';
+    const isNext=!isDone&&def&&def.d>=td&&idx===BRASIL_MATCHES.findIndex(m=>{
+      const d2=ALL_MATCHES_DEF.find(x=>x.id===m.id);
+      const r2=matchResults[m.id];
+      return!(r2&&r2.state==='post')&&d2&&d2.d>=td;
+    });
+    let scoreBlock='';
+    if(isDone&&r.brasilGoals!=null){
+      const rMap={W:'V',D:'E',L:'D'};
+      scoreBlock=`<span class="bgc-score">${r.brasilGoals} : ${r.opGoals}</span><span class="bgc-result result-${r.result}">${rMap[r.result]||'?'}</span>`;
+    } else if(isNext){
+      scoreBlock=`<span class="bgc-result result-P">PRÓXIMO JOGO</span>`;
+    }
+    gamesHtml+=`<div class="brasil-game-card${isDone?' done':''}${isNext?' next':''}">
+      ${isNext?'<div class="next-badge">PRÓXIMO →</div>':''}
+      <div class="bgc-round">${bm.round}</div>
+      <div class="bgc-match">
+        ${bm.home?'Brasil 🇧🇷 vs '+bm.opponent:bm.opponent+' vs Brasil 🇧🇷'}
+        ${scoreBlock}
+      </div>
+      <div class="bgc-info">
+        <span class="bchip bchip-brt">🇧🇷 ${def.brt} BRT</span>
+        <span class="bchip bchip-local">🏟 ${def.loc}</span>
+        <span class="bchip bchip-venue">📍 ${def.city}</span>
+        <span class="bchip bchip-venue">📅 ${fmtDate(def.d)}</span>
+      </div>
+    </div>`;
+  });
+
+  // Classificação atual do Grupo C
+  const grpC=groupStandings['C']||GROUPS_DEF['C'].t.map(t=>({t,j:0,pts:0}));
+  const brasilPos=grpC.findIndex(r=>r.t==='Brasil')+1;
+  const brasilPts=(grpC.find(r=>r.t==='Brasil')||{}).pts||0;
+  const gamesPlayed=(grpC.find(r=>r.t==='Brasil')||{}).j||0;
+  gamesHtml+=`<div style="background:var(--s1);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-top:8px">
+    <div class="section-title" style="margin-top:0">Situação no Grupo C · ${gamesPlayed} jogo${gamesPlayed!==1?'s':''} disputado${gamesPlayed!==1?'s':''}</div>
+    <div style="font-size:.82rem;color:${brasilPos===1?'#4ade80':brasilPos===2?'var(--grn)':'var(--dim)'}">
+      ${brasilPos>0?`Brasil na ${brasilPos}ª posição · ${brasilPts} pt${brasilPts!==1?'s':''}`:
+      'Grupo C ainda não iniciado'}
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:.78rem">
+      <tr style="font-size:.62rem;color:var(--dim);text-transform:uppercase">
+        <th style="text-align:left;padding:4px 6px">Seleção</th>
+        <th style="padding:4px 6px">J</th><th style="padding:4px 6px">Pts</th><th style="padding:4px 6px">SG</th>
+      </tr>
+      ${grpC.map((r,i)=>`<tr style="${r.t==='Brasil'?'background:var(--brbg);font-weight:700':''}">
+        <td style="padding:5px 6px">${i<2?'<span style=\'color:var(--grn)\'>✓</span>':'<span style=\'color:var(--orn)\'>○</span>'} ${r.t}</td>
+        <td style="text-align:center;padding:5px 6px;color:var(--dim)">${r.j||0}</td>
+        <td style="text-align:center;padding:5px 6px;font-weight:700">${r.pts||0}</td>
+        <td style="text-align:center;padding:5px 6px;color:var(--dim)">${r.sg>=0?'+':''}${r.sg||0}</td>
+      </tr>`).join('')}
+    </table>
+  </div>`;
+
+  document.getElementById('brasil-games-section').innerHTML=gamesHtml;
+
+  // ── CHAVEAMENTO DINÂMICO ──────────────────────────────────────────────────
+  const brasilTeam = grpC[0] ? grpC[0].t : 'Brasil';
+  const brasilPos1 = brasilPos===1||gamesPlayed===0;
+
+  // Determinar adversário provável na R32
+  const grpF=groupStandings['F']||GROUPS_DEF['F'].t.map((t,i)=>({t,j:0,pts:0,pos:i}));
+  const r32Opponent1st = grpF[1]?grpF[1].t:'2º do Grupo F'; // 1ºC vs 2ºF
+  const grpFLeader = grpF[0]?grpF[0].t:'1º do Grupo F';
+  const grpHLeader = (groupStandings['H']||[])[0]?.t||'1º Grupo H';
+  const grpJLeader = (groupStandings['J']||[])[0]?.t||'Argentina';
+
+  // Adversários nas oitavas
+  const grpA = groupStandings['A']||[];
+  const grpA1 = grpA[0]?.t||'1º Grupo A';
+  const grpD = groupStandings['D']||[];
+  const grpD2 = grpD[1]?.t||'2º Grupo D';
+
+  function statusPill(n){
+    if(n===0)return'<span class="status-pill sp-confirmed">CONFIRMADO</span>';
+    if(n===1)return'<span class="status-pill sp-probable">PROVÁVEL</span>';
+    if(n===2)return'<span class="status-pill sp-possible">POSSÍVEL</span>';
+    return'<span class="status-pill sp-tbd">A DEFINIR</span>';
+  }
+
+  let bracketHtml=`<div class="section-title">Chaveamento do Brasil — Caminho para o Hexa</div>`;
+
+  // R32
+  bracketHtml+=`<div class="bracket-container">
+    <div class="bracket-phase-header">
+      <span class="bph-name">Rodada de 32 ${statusPill(0)}</span>
+      <span class="bph-date">📅 28/06 – 03/07/2026</span>
+    </div>
+    <div class="bracket-game brasil-game">
+      <div>
+        <div class="bg-match-title">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> ${r32Opponent1st}
+          <span class="brasil-tag">BRASIL</span>
         </div>
-        <div class="m-teams">${g.t1}${isBrasil?' 🇧🇷':''} <span style="color:var(--txt3)">vs</span> ${g.t2}</div>
-        <div class="m-time">
-          <div class="m-time-local">${g.localT} ${g.zone}</div>
-          <div class="m-time-br">🇧🇷 ${g.brT}</div>
+        <div class="bg-detail">
+          <strong>Se Brasil terminar 1º do Grupo C</strong><br>
+          Enfrenta o <strong>2º colocado do Grupo F</strong>
+          ${grpF[1]?`<br>Atualmente: <strong>${r32Opponent1st}</strong>`:''}
+          <span class="scenario">Grupo F: ${GROUPS_DEF.F.t.join(', ')}</span>
         </div>
-        <div class="m-score"><span class="status-badge badge-pre">AGD</span></div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt">🇧🇷 17:00 BRT</div>
+        <div class="bg-brt-sub">📅 Dom 29/06</div>
+        <div class="bg-brt-sub">📍 NRG Stadium, Houston</div>
+      </div>
+    </div>
+    <div class="bracket-game brasil-game" style="background:var(--s3);opacity:.7">
+      <div>
+        <div class="bg-match-title">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> ${grpFLeader}
+          <span class="status-pill sp-possible">SE 2º</span>
+        </div>
+        <div class="bg-detail">
+          <strong>Se Brasil terminar 2º do Grupo C</strong><br>
+          Enfrenta o <strong>1º do Grupo F</strong> (atualmente <strong>${grpFLeader}</strong>)
+          <span class="scenario alt">Jogo mais difícil — enfrentaria a Holanda logo na R32</span>
+        </div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt">🇧🇷 20:00 BRT</div>
+        <div class="bg-brt-sub">📅 Ter 01/07</div>
+        <div class="bg-brt-sub">📍 Gillette Stadium, Boston</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Oitavas
+  bracketHtml+=`<div class="bracket-container">
+    <div class="bracket-phase-header">
+      <span class="bph-name">Oitavas de Final ${statusPill(1)}</span>
+      <span class="bph-date">📅 04/07 – 07/07/2026</span>
+    </div>
+    <div class="bracket-game brasil-game">
+      <div>
+        <div class="bg-match-title">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> Vencedor R32-3
+          <span class="brasil-tag">SE AVANÇAR</span>
+        </div>
+        <div class="bg-detail">
+          <strong>Se vencer na Rodada de 32</strong><br>
+          Enfrenta o vencedor do jogo entre <strong>1ºB vs 2ºE</strong>
+          <span class="scenario">Possíveis: Suíça, Canadá, C. do Marfim, Equador</span>
+        </div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt">🇧🇷 17:00 BRT</div>
+        <div class="bg-brt-sub">📅 Sáb 04/07</div>
+        <div class="bg-brt-sub">📍 MetLife, Nova York</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Quartas
+  bracketHtml+=`<div class="bracket-container">
+    <div class="bracket-phase-header">
+      <span class="bph-name">Quartas de Final ${statusPill(2)}</span>
+      <span class="bph-date">📅 09/07 – 11/07/2026</span>
+    </div>
+    <div class="bracket-game brasil-game">
+      <div>
+        <div class="bg-match-title">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> Adversário das Oitavas
+          <span class="brasil-tag">SE AVANÇAR</span>
+        </div>
+        <div class="bg-detail">
+          <strong>Cruzamento com lado oposto do bracket</strong><br>
+          Projeção de adversários: <strong>Espanha</strong> (Gr.H lider) ou <strong>Uruguai</strong>
+          <span class="scenario">Espanha é favorita do Grupo H → caminho cruzaria aqui nas quartas</span>
+        </div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt">🇧🇷 21:00 BRT</div>
+        <div class="bg-brt-sub">📅 Qui 09/07</div>
+        <div class="bg-brt-sub">📍 MetLife, Nova York</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Semifinal
+  bracketHtml+=`<div class="bracket-container">
+    <div class="bracket-phase-header">
+      <span class="bph-name">Semifinal ${statusPill(3)}</span>
+      <span class="bph-date">📅 Ter 15/07/2026 · 21:00 BRT · MetLife, Nova York</span>
+    </div>
+    <div class="bracket-game brasil-game">
+      <div>
+        <div class="bg-match-title">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> Adversário das Quartas
+          <span class="brasil-tag">SE AVANÇAR</span>
+        </div>
+        <div class="bg-detail">
+          Projeção: <strong>${grpJLeader}</strong> (${grpJLeader==='Argentina'?'clássico sul-americano':'Grupo J'})
+          <span class="scenario">Argentina e Brasil no mesmo lado do chaveamento → possível reencontro na semi</span>
+        </div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt">🇧🇷 21:00 BRT</div>
+        <div class="bg-brt-sub">📅 Ter 15/07</div>
+        <div class="bg-brt-sub">📍 MetLife, Nova York</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Final
+  bracketHtml+=`<div class="bracket-container" style="border-color:var(--gold)">
+    <div class="bracket-phase-header" style="background:var(--gbg)">
+      <span class="bph-name" style="color:var(--gold2)">⭐ FINAL ${statusPill(3)}</span>
+      <span class="bph-date">📅 Dom 19/07/2026 · 17:00 BRT</span>
+    </div>
+    <div class="bracket-game brasil-game" style="background:rgba(227,160,8,.06)">
+      <div>
+        <div class="bg-match-title" style="color:var(--gold2)">
+          🇧🇷 Brasil <span style="color:var(--dim);font-weight:400">vs</span> A Definir
+          <span class="status-pill" style="background:var(--gbg);color:var(--gold2);border:1px solid var(--gold)">HEXA?</span>
+        </div>
+        <div class="bg-detail">
+          Lado oposto do bracket — favoritos: <strong>França</strong> ou <strong>Espanha</strong>
+          <span class="scenario" style="border-left-color:var(--gold2);color:var(--gold2)">MetLife Stadium · Nova York/NJ · 60.000+ torcedores</span>
+        </div>
+      </div>
+      <div class="bg-times">
+        <div class="bg-brt" style="font-size:1.3rem">🇧🇷 17:00 BRT</div>
+        <div class="bg-brt-sub">📅 Dom 19/07/2026</div>
+        <div class="bg-brt-sub">🏆 MetLife Stadium</div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('brasil-bracket-section').innerHTML=bracketHtml;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER GRUPOS
+// ─────────────────────────────────────────────────────────────────────────────
+function renderGrupos(){
+  const el=document.getElementById('groups-grid');
+  el.innerHTML='';
+  Object.entries(GROUPS_DEF).forEach(([letter])=>{
+    const standing=groupStandings[letter]||GROUPS_DEF[letter].t.map(t=>({t,j:0,v:0,e:0,d:0,gp:0,gc:0,pts:0,sg:0}));
+    const hasBrasil=standing.some(r=>r.t==='Brasil');
+    const hasResults=standing.some(r=>r.j>0);
+    const card=document.createElement('div');
+    card.className='group-card'+(hasBrasil?' has-brasil':'');
+    let rows=standing.map((r,i)=>{
+      const isBr=r.t==='Brasil';
+      const q=i<2?'q1 q2':'q3';
+      return`<tr${isBr?' class="br-row"':''}>
+        <td><span class="pos ${q}">${i+1}°</span>${r.t}${isBr?' 🇧🇷':''}</td>
+        <td>${r.j||0}</td>
+        <td style="color:var(--grn)">${r.v||0}</td>
+        <td style="color:var(--orn)">${r.e||0}</td>
+        <td style="color:var(--red)">${r.d||0}</td>
+        <td>${r.gp||0}:${r.gc||0}</td>
+        <td class="pts">${r.pts||0}</td>
+      </tr>`;
+    }).join('');
+    card.innerHTML=`<div class="gh">Grupo ${letter}${hasBrasil?' 🇧🇷':''}<span style="font-size:.65rem;color:var(--dim);font-weight:400">${hasResults?'atualizado':'aguardando'}</span></div>
+      <table class="gt">
+        <thead><tr><th>Seleção</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GF:GC</th><th>Pts</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="qual-legend">
+        <span class="ql q12">Top 2 — classificados</span>
+        <span class="ql q3">3º — disputa vaga</span>
       </div>`;
-    });
-  });
-  el.innerHTML=html;
-  document.getElementById('jogos-status').className='status-bar ok';
-  document.getElementById('jogos-status').textContent=`✓ ${ALL_GAMES.length} partidas carregadas`;
-}
-
-// ── RENDER ODDS ──────────────────────────────────────────────────────────────
-async function loadOdds(){
-  try{
-    const r=await fetch('/api/odds');
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    oddsData=await r.json();
-    if(!Array.isArray(oddsData))throw new Error('formato inválido');
-    renderOdds();
-    renderBrasilOdds();
-  }catch(e){
-    const els=['odds-status','odds-updated'];
-    els.forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){el.className='status-bar err';el.textContent='Odds indisponíveis: configure ODDS_API_KEY no Netlify';}
-    });
-    document.getElementById('brasil-odds').innerHTML='<div class="odds-loading" style="color:var(--red)">⚠️ Configure a chave da The Odds API nas variáveis de ambiente do Netlify (ODDS_API_KEY)</div>';
-    document.getElementById('all-odds').innerHTML='<div class="odds-loading" style="color:var(--red)">⚠️ Odds indisponíveis — sem chave de API configurada</div>';
-  }
-}
-
-function renderBrasilOdds(){
-  const el=document.getElementById('brasil-odds');
-  const brasilMatches=oddsData.filter(m=>m.home_team==='Brazil'||m.away_team==='Brazil');
-  if(!brasilMatches.length){el.innerHTML='<div class="odds-loading">Nenhuma odd encontrada para o Brasil no momento</div>';return;}
-  let html='';
-  brasilMatches.forEach(m=>{
-    const bk=m.bookmakers&&m.bookmakers[0];
-    if(!bk)return;
-    const h2h=bk.markets&&bk.markets.find(mk=>mk.key==='h2h');
-    if(!h2h)return;
-    const outcomes=h2h.outcomes||[];
-    const home=outcomes.find(o=>o.name===m.home_team);
-    const away=outcomes.find(o=>o.name===m.away_team);
-    const draw=outcomes.find(o=>o.name==='Draw');
-    const hP=home?home.price.toFixed(2):'?';
-    const dP=draw?draw.price.toFixed(2):'?';
-    const aP=away?away.price.toFixed(2):'?';
-    const dt=new Date(m.commence_time).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'});
-    const tm=new Date(m.commence_time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
-    html+=`<div class="odds-match">
-      <div class="odds-match-name">${m.home_team} vs ${m.away_team} · <span style="color:var(--txt2);font-size:.75rem">${dt} às ${tm} BRT · ${bk.title}</span></div>
-      <div class="odds-row">
-        <div class="odd-box ${+hP<2?'fav':''}"><div class="odd-lbl">${m.home_team}</div><div class="odd-val">${hP}</div></div>
-        <div class="odd-box"><div class="odd-lbl">Empate</div><div class="odd-val">${dP}</div></div>
-        <div class="odd-box ${+aP<2?'fav':''}"><div class="odd-lbl">${m.away_team}</div><div class="odd-val">${aP}</div></div>
-      </div>
-    </div>`;
-  });
-  el.innerHTML=html||'<div class="odds-loading">Sem odds disponíveis para o Brasil no momento</div>';
-  const upd=document.getElementById('odds-updated');
-  if(upd){const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});upd.textContent='Atualizado '+now;}
-}
-
-function renderOdds(){
-  const el=document.getElementById('all-odds');
-  const sb=document.getElementById('odds-status');
-  if(!oddsData.length){
-    el.innerHTML='<div class="odds-loading">Nenhum jogo com odds disponível no momento</div>';
-    return;
-  }
-  let html='';
-  oddsData.forEach(m=>{
-    const bks=m.bookmakers||[];
-    if(!bks.length)return;
-    // pegar bet365 ou primeiro disponível
-    const bk=bks.find(b=>b.key==='bet365')||bks.find(b=>b.key==='pinnacle')||bks[0];
-    const h2h=bk.markets&&bk.markets.find(mk=>mk.key==='h2h');
-    if(!h2h)return;
-    const outcomes=h2h.outcomes||[];
-    const home=outcomes.find(o=>o.name===m.home_team);
-    const away=outcomes.find(o=>o.name===m.away_team);
-    const draw=outcomes.find(o=>o.name==='Draw');
-    const hP=home?home.price.toFixed(2):'?';
-    const dP=draw?draw.price.toFixed(2):'?';
-    const aP=away?away.price.toFixed(2):'?';
-    const dt=new Date(m.commence_time).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'});
-    const tm=new Date(m.commence_time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
-    const isBrasil=m.home_team==='Brazil'||m.away_team==='Brazil';
-    html+=`<div class="odds-match${isBrasil?' brasil-m':''}">
-      <div class="odds-match-name" style="${isBrasil?'color:#3dd68c':''}">
-        ${isBrasil?'🇧🇷 ':''}${m.home_team} vs ${m.away_team}
-        <span style="color:var(--txt2);font-size:.72rem;margin-left:6px">${dt} ${tm} BRT · ${bk.title}</span>
-      </div>
-      <div class="odds-row">
-        <div class="odd-box ${+hP<2?'fav':''}"><div class="odd-lbl">${m.home_team.split(' ').pop()}</div><div class="odd-val">${hP}</div></div>
-        <div class="odd-box"><div class="odd-lbl">Empate</div><div class="odd-val">${dP}</div></div>
-        <div class="odd-box ${+aP<2?'fav':''}"><div class="odd-lbl">${m.away_team.split(' ').pop()}</div><div class="odd-val">${aP}</div></div>
-      </div>
-    </div>`;
+    el.appendChild(card);
   });
   const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  const el2=document.getElementById('all-odds');
-  el2.innerHTML=`<div class="odds-section"><div class="odds-title"><span>Odds 1X2 · ${oddsData.length} jogos</span><span style="font-size:.65rem;font-weight:400;color:var(--txt2)">${now} · auto-refresh 2min</span></div>${html}</div>`;
-  sb.className='status-bar ok';
-  sb.textContent=`✓ ${oddsData.length} jogos · ${bks&&oddsData[0]&&(oddsData[0].bookmakers.find(b=>b.key==='bet365')?'bet365':'Pinnacle')} · ${now}`;
+  const sb=document.getElementById('grupos-status');
+  sb.className='sbar ok';
+  sb.textContent=`✓ Classificação atualizada · ${now}`;
 }
 
-// ── TABS ──────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER TODOS OS JOGOS
+// ─────────────────────────────────────────────────────────────────────────────
+function renderJogos(){
+  const el=document.getElementById('all-matches');
+  const byDay={},dO=[];
+  ALL_MATCHES_DEF.forEach(m=>{
+    if(!byDay[m.d]){byDay[m.d]=[];dO.push(m.d);}
+    byDay[m.d].push(m);
+  });
+  const td=today();
+  let html='';
+  dO.forEach(dk=>{
+    const items=byDay[dk];
+    const isToday=dk===td;
+    html+=`<div class="day-block">
+      <div class="day-label">${fmtDate(dk)}${isToday?' · <span style="color:#4ade80">HOJE</span>':''}
+      <span>${items.length} jogo${items.length>1?'s':''}</span></div>`;
+    items.forEach(m=>{
+      const r=matchResults[m.id];
+      const isDone=r&&r.state==='post';
+      const score=isDone?`${r.g1}:${r.g2}`:'';
+      html+=`<div class="match-row${m.brasil?' brasil':''}">
+        <div><div class="mr-grp">Gr.${m.g}</div><div class="mr-city">${m.city}</div></div>
+        <div class="mr-teams">${m.t1}${m.brasil&&(m.t1==='Brasil')?' <span class="br">🇧🇷</span>':''} <span style="color:var(--dim2)">vs</span> ${m.t2}${m.brasil&&(m.t2==='Brasil')?' <span class="br">🇧🇷</span>':''}</div>
+        <div>${isDone?`<span class="ft-badge">FT</span>`:''}</div>
+        <div class="mr-times">
+          ${isDone?`<div class="mr-score">${score}</div>`:`<div class="mr-brt">🇧🇷 ${m.brt}</div><div class="mr-local">${m.loc}</div>`}
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  el.innerHTML=html;
+  document.getElementById('jogos-status').className='sbar ok';
+  document.getElementById('jogos-status').textContent=`✓ ${ALL_MATCHES_DEF.length} partidas · horários BRT e local`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER ODDS
+// ─────────────────────────────────────────────────────────────────────────────
+function renderOdds(){
+  const el=document.getElementById('all-odds');
+  if(!oddsData.length){
+    el.innerHTML=`<div class="odds-empty">⚠️ Odds indisponíveis — configure a variável <code>ODDS_API_KEY</code> no Netlify.<br><br>Crie uma chave gratuita em <a href="https://the-odds-api.com/#get-access" target="_blank" style="color:var(--blu)">the-odds-api.com</a> e adicione em Site Settings → Environment Variables.</div>`;
+    return;
+  }
+  const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  let html='';
+  oddsData.forEach(ev=>{
+    const bk=ev.bookmakers.find(b=>b.key==='bet365')||ev.bookmakers.find(b=>b.key==='pinnacle')||ev.bookmakers[0];
+    if(!bk)return;
+    const h2h=bk.markets.find(m=>m.key==='h2h');
+    if(!h2h)return;
+    const outs=h2h.outcomes;
+    const home=outs.find(o=>o.name===ev.home_team);
+    const away=outs.find(o=>o.name===ev.away_team);
+    const draw=outs.find(o=>o.name==='Draw');
+    const hP=home?+home.price:0,dP=draw?+draw.price:0,aP=away?+away.price:0;
+    const min=Math.min(hP,dP||999,aP);
+    const dt=new Date(ev.commence_time).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'});
+    const tm=new Date(ev.commence_time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+    const isBrasil=ev.home_team==='Brazil'||ev.away_team==='Brazil';
+    html+=`<div class="odds-card${isBrasil?' brasil-m':''}">
+      <div class="oc-header">
+        <div>
+          <div class="oc-match">${isBrasil?'🇧🇷 ':''}${ev.home_team} vs ${ev.away_team}</div>
+          <div class="oc-date">📅 ${dt} · 🇧🇷 ${tm} BRT · ${bk.title}</div>
+        </div>
+      </div>
+      <div class="odds-grid">
+        <div class="odd-cell${hP===min&&min>0?' best':''}">
+          <div class="odd-lbl">${ev.home_team.split(' ').slice(-1)[0]}</div>
+          <div class="odd-val">${hP?hP.toFixed(2):'—'}</div>
+        </div>
+        <div class="odd-cell${dP&&dP===min?' best':''}">
+          <div class="odd-lbl">Empate</div>
+          <div class="odd-val">${dP?dP.toFixed(2):'—'}</div>
+        </div>
+        <div class="odd-cell${aP===min&&min>0&&aP!==hP?' best':''}">
+          <div class="odd-lbl">${ev.away_team.split(' ').slice(-1)[0]}</div>
+          <div class="odd-val">${aP?aP.toFixed(2):'—'}</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=html||'<div class="odds-empty">Nenhuma partida com odds disponíveis no momento.</div>';
+  document.getElementById('odds-status').className='sbar ok';
+  document.getElementById('odds-status').textContent=`✓ ${oddsData.length} jogos · bet365/Pinnacle · ${now} · auto-refresh 2min`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SYNC
+// ─────────────────────────────────────────────────────────────────────────────
+async function sync(){
+  setHeader('loading','Buscando dados...');
+  try{
+    // Resultados
+    const data=await fetchWC();
+    wcData=data;
+    parseAndCompute(data);
+    lastSync=new Date();
+    const now=lastSync.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setHeader('ok',`✓ ${now}`);
+    document.getElementById('brasil-status').className='sbar ok';
+    document.getElementById('brasil-status').textContent=`✓ Dados atualizados ${now} · auto-refresh 5min`;
+  }catch(e){
+    setHeader('err','Erro de conexão');
+    document.getElementById('brasil-status').className='sbar err';
+    document.getElementById('brasil-status').textContent=`⚠️ Erro ao carregar dados: ${e.message}`;
+  }
+  renderAll();
+  // Odds separado (não-crítico)
+  try{
+    const od=await fetchOdds();
+    if(Array.isArray(od))oddsData=od;
+  }catch(e){}
+  renderOdds();
+  setTimeout(sync,300000); // 5min
+}
+
+function renderAll(){
+  renderBrasil();
+  renderGrupos();
+  renderJogos();
+}
+
 function showTab(name){
   document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('active',['brasil','grupos','jogos','odds'][i]===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
 }
 
-// ── INIT ────────────────────────────────────────────────────────────────────
-renderGrupos();
-renderTodosJogos();
-loadOdds();
-setInterval(loadOdds, 120000); // refresh odds a cada 2 min
+// init
+renderAll(); // render vazio primeiro
+sync();      // depois busca dados
+setInterval(()=>{
+  fetchOdds().then(od=>{if(Array.isArray(od))oddsData=od;renderOdds();}).catch(()=>{});
+},120000);   // odds a cada 2min
 </script>
 </body>
 </html>
